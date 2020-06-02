@@ -1,8 +1,59 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {NavLink} from 'react-router-dom';
-const Main = () => {
+import axios from 'axios';
+const Main = (props) => {
+
+    const [title, setTitle] = useState();
+    const [start_time, setStarttime] = useState();
+    const [end_time, setEndtime] = useState();
+
+    var id = props.match.params.id;
+
+    useEffect(()=>{
+        axios.get(`http://localhost:3000/interviews/${id}`)
+          .then(res =>  {
+              setTitle(res.data.title)
+              setStarttime(res.data.start_time)
+              setEndtime(res.data.end_time)
+            })
+      }, [])
+    
+      const handleSubmit = (e) =>{
+        e.preventDefault();
+        let data= {
+          interview: {
+            title: title,
+            start_time: start_time,
+            end_time: end_time
+          }
+        }
+    
+        axios.patch(`http://localhost:3000/interviews/${props.match.params.id}`, {data})
+          .then(res => {
+            console.log(res);
+          })
+      };
+
     return (
-        <div> Edit Interview </div>
+        <div> 
+            <h1> Edit Interview </h1>
+            <form onSubmit = {handleSubmit}>
+                <label>
+                    Title :
+                    <input type="text" value={title} onChange={(e) => setTitle(e.target.value)}/>
+                </label><br></br>
+                <label>
+                    Start Time :
+                    <input type="datetime-local" value={start_time} onChange={(e) => setStarttime(e.target.value)}/>
+                </label><br></br>
+                <label>
+                    End Time :
+                    <input type="datetime-local" value={end_time} onChange={(e) => setEndtime(e.target.value)}/>
+                </label><br></br>
+                <input type="submit" value="Submit" />
+            </form> 
+
+        </div>
     );
 }
 
