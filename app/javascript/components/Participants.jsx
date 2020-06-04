@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import {NavLink} from 'react-router-dom';
-import axios from 'axios';
+import {getParticipants} from '../redux/actions/participantActions';
+import { useSelector, useDispatch } from 'react-redux';
 const Participants = () => {
 
-    const [participants, setParticipants] = useState([]);
-
+    const participants = useSelector(
+        state => state.participants
+    );
+    const dispatch = useDispatch()
+    
     useEffect(() => {
-        axios.get('http://localhost:3000/participants').then((res) => {
-            console.log(res.data);
-            setParticipants(res.data)
-        })
-        .catch(err => {
-            console.log(err)
-        })
+        dispatch(getParticipants())
     }, [])
 
     return (

@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import {NavLink} from 'react-router-dom';
-import axios from 'axios';
+import { useSelector, useDispatch } from 'react-redux';
+import {getInterviews} from '../redux/actions/interviewActions';
 const Interviews = () => {
 
-    const [interviews, setInterviews] = useState([]);
-
+    const interviews = useSelector(
+        state => state.interviews
+    );
+    const dispatch = useDispatch()
+    
     useEffect(() => {
-        axios.get('http://localhost:3000/interviews').then((res) => {
-            console.log(res.data);
-            setInterviews(res.data)
-        })
-        .catch(err => {
-            console.log(err)
-        })
+        dispatch(getInterviews())
     }, [])
 
     return (
