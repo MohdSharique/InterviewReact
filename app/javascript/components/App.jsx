@@ -6,12 +6,18 @@ import Participants from './Participants';
 import ShowInterview from './ShowInterview';
 import EditInterview from './EditInterview';
 
+import store from  '../redux/store';
+import {Provider} from 'react-redux';
+
+
 const App = (props) => {
     return(
-      <div className = "Main">
-        <Navbar />
-        <RouteSwitch />
-      </div>
+      <Provider store={store}>
+        <div className = "Main">
+          <Navbar />
+          <RouteSwitch />
+        </div>
+      </Provider>
     );
 }
 
