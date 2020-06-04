@@ -1,8 +1,14 @@
 import { combineReducers } from 'redux'
-import interviewsReducer from './interviewReducer'
+import interviewReducer from './interviewReducer'
+import interviewsReducer from './interviewsReducer'
+import participantReducer from './participantReducer'
+import participantsReducer from './participantsReducer'
 
 const rootReducer = combineReducers({
-    interviews: interviewsReducer
+    interview: interviewReducer,
+    interviews: interviewsReducer,
+    participant: participantReducer,
+    participants: participantsReducer
 });
 
 export default rootReducer;

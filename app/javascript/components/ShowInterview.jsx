@@ -1,28 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import {NavLink} from 'react-router-dom';
-import axios from 'axios';
+
+import { useSelector, useDispatch } from 'react-redux';
+import {getInterview} from '../redux/actions/interviewActions'
+import {addParticipant, edit} from '../redux/actions/participantActions'
+
 const Main = (props) => {
-    console.log(props)
-
-    var id = props.match.params.id;
-    // const [detail, setDetail] = useState([]);
     
-    const [interview, setInterview] = useState({});
-    const [participants, setParticipants] = useState([]);
+    const id = props.match.params.id;    
+    const {title, start_time, end_time, participants} = useSelector(state => state.interview);
 
-    const [email, setEmail] = useState("");
-    const [role, setRole] = useState("");
+    const {email, role} = useSelector(state => state.participant);
     
+    const dispatch = useDispatch()
     useEffect(() => {
-        axios.get(`http://localhost:3000/interviews/${id}`).then((res) => {
-            console.log(res.data);
-            setInterview(res.data.interview)
-            setParticipants(res.data.participants)
-        })
-        .catch(err => {
-            console.log(err)
-        })
+        dispatch(getInterview(id))
     }, [])
+
+    // console.log(interviewData);
+    
 
     const participantSubmit = (e) =>{
         e.preventDefault();
@@ -33,24 +29,21 @@ const Main = (props) => {
             interview_id: props.match.params.id
           }
         }
-    
-        axios.post(`http://localhost:3000/interviews`, {data})
-          .then(res => {
-            console.log(res);
-          })
-      };
+        dispatch(addParticipant(data));
+    };
 
-    // console.log(interview.title)
-    // console.log(detail.interview['title'])
-    // console.log(detail.interview.title)
+    const changeHandler = (key, value) => {
+        dispatch(edit(key, value))
+    }
+
     return (
         <div> 
             <h1> Show Interview </h1> 
-            {!interview ? ("") : (
+            {!title ? ("") : (
                 <div>
-                    <strong> Title: </strong> {interview.title} <br/>
-                    <strong> Start Time: </strong> {interview.start_time} <br/>
-                    <strong> End Time:</strong> {interview.end_time} <br/>
+                    <strong> Title: </strong> {title} <br/>
+                    <strong> Start Time: </strong> {start_time} <br/>
+                    <strong> End Time:</strong> {end_time} <br/>
                 </div>
             )}
             <br/>
@@ -82,11 +75,11 @@ const Main = (props) => {
             <form onSubmit = {participantSubmit}>
                 <label>
                     Email :
-                    <input type="text" value={email} onChange={(e) => setEmail(e.target.value)}/>
+                    <input type="text" value={email} onChange={(e) => changeHandler('email', e.target.value)}/>
                 </label><br></br>
                 <label>
                     Role :
-                    <input type="datetime-local" value={role} onChange={(e) => setRole(e.target.value)}/>
+                    <input type="datetime-local" value={role} onChange={(e) => changeHandler('role', e.target.value)}/>
                 </label><br></br>
                 <input type="submit" value="Submit" />
             </form>
